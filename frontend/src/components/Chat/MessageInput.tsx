@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, type KeyboardEvent } from "react";
+import { VoiceInput } from "./VoiceInput";
 import { cn } from "../../lib/utils";
 
 interface MessageInputProps {
@@ -31,6 +32,10 @@ export function MessageInput({ onSend, isLoading, disabled }: MessageInputProps)
     }
   };
 
+  const handleVoiceTranscript = (text: string) => {
+    setInput((prev) => prev + text);
+  };
+
   return (
     <div className="border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4">
       <div className="max-w-4xl mx-auto">
@@ -55,6 +60,8 @@ export function MessageInput({ onSend, isLoading, disabled }: MessageInputProps)
               )}
             />
           </div>
+
+          <VoiceInput onTranscript={handleVoiceTranscript} disabled={isLoading || disabled} />
 
           <button
             onClick={handleSend}

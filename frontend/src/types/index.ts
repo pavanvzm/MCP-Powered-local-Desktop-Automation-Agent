@@ -88,4 +88,66 @@ export interface AppSettings {
   streamingEnabled: boolean;
 }
 
-export type TabView = "chat" | "dashboard" | "playground";
+export type TabView = "chat" | "dashboard" | "playground" | "tools" | "memory" | "plugins";
+
+// ── Voice Types ──
+export interface VoiceState {
+  isListening: boolean;
+  isSpeaking: boolean;
+  transcript: string;
+  isSupported: boolean;
+}
+
+// ── Custom Tool Types ──
+export interface CustomToolDef {
+  id: string;
+  name: string;
+  description: string;
+  parameters: Array<{
+    name: string;
+    type: string;
+    description: string;
+    required: boolean;
+  }>;
+  code: string;
+  created_at: string;
+  version: number;
+}
+
+// ── Plugin Types ──
+export interface PluginDef {
+  id: string;
+  name: string;
+  version: string;
+  description: string;
+  author: string;
+  enabled: boolean;
+}
+
+// ── Memory Visualization Types ──
+export interface MemoryNode {
+  id: string;
+  content: string;
+  timestamp: string;
+  distance: number;
+  metadata?: Record<string, unknown>;
+}
+
+export interface MemoryCluster {
+  id: string;
+  label: string;
+  memories: MemoryNode[];
+}
+
+// ── Multi-Agent Orchestrator Types ──
+export interface AgentStatus {
+  name: string;
+  specialization: string;
+  is_busy: boolean;
+  tasks_completed: number;
+}
+
+export interface OrchestratorStatus {
+  agents: Record<string, AgentStatus>;
+  queue_size: number;
+}

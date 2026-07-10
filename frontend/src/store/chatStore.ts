@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Message, Session, StreamChunk, AgentMetrics } from "../types";
+import type { Message, Session, StreamChunk, AgentMetrics, CustomToolDef, PluginDef, MemoryNode, OrchestratorStatus } from "../types";
 
 interface ChatState {
   // Messages
@@ -15,6 +15,19 @@ interface ChatState {
   // Metrics
   metrics: AgentMetrics | null;
 
+  // Custom Tools
+  customTools: CustomToolDef[];
+  setCustomTools: (tools: CustomToolDef[]) => void;
+
+  // Plugins
+  plugins: PluginDef[];
+
+  // Memory Visualization
+  memoryNodes: MemoryNode[];
+
+  // Orchestrator
+  orchestratorStatus: OrchestratorStatus | null;
+
   // Actions
   addMessage: (message: Message) => void;
   setStreaming: (streaming: boolean) => void;
@@ -29,6 +42,9 @@ interface ChatState {
   setMetrics: (metrics: AgentMetrics) => void;
   clearMessages: () => void;
   processChunk: (chunk: StreamChunk) => void;
+  setPlugins: (plugins: PluginDef[]) => void;
+  setMemoryNodes: (nodes: MemoryNode[]) => void;
+  setOrchestratorStatus: (status: OrchestratorStatus) => void;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
@@ -39,6 +55,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
   activeSession: null,
   sessions: [],
   metrics: null,
+  customTools: [],
+  plugins: [],
+  memoryNodes: [],
+  orchestratorStatus: null,
 
   addMessage: (message) =>
     set((state) => ({ messages: [...state.messages, message] })),
@@ -83,6 +103,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   clearMessages: () => set({ messages: [], streamingContent: "" }),
 
+  setCustomTools: (tools) => set({ customTools: tools }),
+  setPlugins: (plugins) => set({ plugins }),
+  setMemoryNodes: (nodes) => set({ memoryNodes: nodes }),
+  setOrchestratorStatus: (status) => set({ orchestratorStatus: status }),
+
   processChunk: (chunk: StreamChunk) => {
     const state = get();
 
@@ -92,7 +117,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
         break;
 
       case "tool_calls_start":
-        // Cleared when new tool calls start
         set({ currentToolCalls: [] });
         break;
 

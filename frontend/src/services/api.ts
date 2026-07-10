@@ -110,6 +110,67 @@ class ApiService {
   async getTask(taskId: string) {
     return this.request(`/api/v1/tasks/${taskId}`);
   }
+
+  // ── Custom Tools ──
+  async createCustomTool(name: string, description: string, code: string, parameters: Array<Record<string, unknown>>) {
+    return this.request("/api/v1/tools/custom", {
+      method: "POST",
+      body: JSON.stringify({ name, description, code, parameters }),
+    });
+  }
+
+  async listCustomTools() {
+    return this.request<{ tools: Array<Record<string, unknown>>; count: number }>("/api/v1/tools/custom");
+  }
+
+  async deleteCustomTool(toolId: string) {
+    return this.request(`/api/v1/tools/custom/${toolId}`, { method: "DELETE" });
+  }
+
+  // ── Voice ──
+  async speechToText(audioBlob: Blob) {
+    const formData = new FormData();
+    formData.append("audio", audioBlob);
+    const headers: Record<string, string> = {};
+    if (this.apiKey) headers["X-API-Key"] = this.apiKey;
+    const response = await fetch(`${this.baseUrl}/api/v1/voice/stt`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+    return response.json();
+  }
+
+  async textToSpeech(text: string) {
+    return this.request<{ success: boolean; audio: string; format: string }>("/api/v1/voice/tts", {
+      method: "POST",
+      body: JSON.stringify({ text }),
+    });
+  }
+
+  // ── Multi-Agent Orchestrator ──
+  async sendToOrchestrator(message: string) {
+    return this.request("/api/v1/orchestrator/process", {
+      method: "POST",
+      body: JSON.stringify({ message }),
+    });
+  }
+
+  async getOrchestratorStatus() {
+    return this.request("/api/v1/orchestrator/status");
+  }
+
+  // ── Plugins ──
+  async listPlugins() {
+    return this.request<{ plugins: Array<Record<string, unknown>>; count: number }>("/api/v1/plugins");
+  }
+
+  async togglePlugin(name: string, enabled: boolean) {
+    return this.request(`/api/v1/plugins/${name}/toggle`, {
+      method: "POST",
+      body: JSON.stringify({ enabled }),
+    });
+  }
 }
 
 export const apiService = new ApiService();

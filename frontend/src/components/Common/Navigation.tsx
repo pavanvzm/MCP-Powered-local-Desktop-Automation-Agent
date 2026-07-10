@@ -12,6 +12,9 @@ const navItems: NavItem[] = [
   { id: "chat", label: "Chat", icon: "💬" },
   { id: "dashboard", label: "Dashboard", icon: "📊" },
   { id: "playground", label: "Playground", icon: "🧪" },
+  { id: "tools", label: "Tools", icon: "🔧" },
+  { id: "memory", label: "Memory", icon: "🧠" },
+  { id: "plugins", label: "Plugins", icon: "🧩" },
 ];
 
 export function Navigation() {
@@ -28,17 +31,17 @@ export function Navigation() {
             AI
           </div>
           <span className="font-semibold text-slate-900 dark:text-slate-100 hidden sm:inline">
-            AI Agent
+            AgentOS
           </span>
         </div>
 
-        <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-lg p-1">
+        <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-lg p-1 overflow-x-auto">
           {navItems.map((item) => (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all whitespace-nowrap",
                 activeTab === item.id
                   ? "bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-sm"
                   : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"

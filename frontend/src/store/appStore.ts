@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { AppSettings, TabView } from "../types";
+import type { AppSettings, TabView, VoiceState } from "../types";
 
 interface AppState {
   // Theme
@@ -20,6 +20,15 @@ interface AppState {
   // Connection
   isConnected: boolean;
   connectionStatus: "connected" | "disconnected" | "reconnecting" | "error";
+
+  // Voice
+  voice: VoiceState;
+  setVoiceState: (state: Partial<VoiceState>) => void;
+
+  // Feature flags
+  featureVoiceEnabled: boolean;
+  featurePluginsEnabled: boolean;
+  featureMultiAgentEnabled: boolean;
 
   // Actions
   setTheme: (theme: "light" | "dark" | "system") => void;
@@ -54,6 +63,20 @@ export const useAppStore = create<AppState>()(
       isApiKeySet: false,
       isConnected: false,
       connectionStatus: "disconnected",
+
+      voice: {
+        isListening: false,
+        isSpeaking: false,
+        transcript: "",
+        isSupported: typeof window !== "undefined" && ("webkitSpeechRecognition" in window || "SpeechRecognition" in window),
+      },
+
+      featureVoiceEnabled: true,
+      featurePluginsEnabled: true,
+      featureMultiAgentEnabled: true,
+
+      setVoiceState: (state) =>
+        set((prev) => ({ voice: { ...prev.voice, ...state } })),
 
       setTheme: (theme) => {
         const resolvedTheme = resolveTheme(theme);
