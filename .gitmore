@@ -1,0 +1,84 @@
+# ============================================
+# .gitmore - Repository Configuration
+# ============================================
+
+[metadata]
+    name = "AI Agent Production System"
+    description = "Production-grade AI agent with natural language understanding, task automation, API integration, persistent memory, and error recovery."
+    homepage = "https://github.com/pavanvzm/MCP-Powered-local-Desktop-Automation-Agent"
+    topics = [
+        "ai-agent",
+        "llm",
+        "langchain",
+        "fastapi",
+        "react",
+        "typescript",
+        "machine-learning",
+        "automation",
+        "docker",
+        "chromadb",
+    ]
+
+[branches "main"]
+    protection = true
+    required_reviews = 2
+    dismiss_stale_reviews = true
+    require_code_owner_review = true
+    required_status_checks = [
+        "Backend Checks",
+        "Frontend Checks",
+        "Security Scan",
+        "Docker Build",
+    ]
+    enforce_admins = true
+    require_signed_commits = false
+    allow_force_pushes = false
+    allow_deletions = false
+    require_linear_history = true
+
+[branches "develop"]
+    protection = true
+    required_reviews = 1
+    dismiss_stale_reviews = true
+    required_status_checks = [
+        "Backend Checks",
+        "Frontend Checks",
+    ]
+    allow_force_pushes = false
+    allow_deletions = false
+
+[branches "feature/*"]
+    protection = false
+    required_reviews = 0
+
+[ci]
+    pipeline_file = ".github/workflows/ci.yml"
+    required_checks = [
+        "Backend Checks",
+        "Frontend Checks",
+        "Docker Build",
+    ]
+
+[security]
+    secret_scanning = true
+    dependabot = true
+    codeql_analysis = true
+
+[code_quality]
+    python_linter = "ruff"
+    python_formatter = "black"
+    typescript_linter = "eslint"
+    typescript_formatter = "prettier"
+    test_coverage_threshold = 90
+
+[deployment]
+    strategy = "rolling"
+    staging_environment = "staging"
+    production_environment = "production"
+    require_approval_for_production = true
+
+[codeowners]
+    "backend/" = "@pavanvzm"
+    "frontend/" = "@pavanvzm"
+    "docker/" = "@pavanvzm"
+    ".github/" = "@pavanvzm"
